@@ -1,6 +1,10 @@
 About
 ========
-Calculates the luminance value and histogram of JPEG images.  This is based on Bill Yeh's excellent node-pixelr, adapted for getting luminance and histogram data instead of raw pixels.
+Calculates the luminance value and histogram of JPEG images.  This is based on Bill Yeh's excellent node-pixelr (https://github.com/billyeh/node-pixelr), adapted for getting luminance and histogram data instead of raw pixels.
+
+I was originally using node-pixelr and calculating luminance and histogram data in javascript, but I thought it would be faster to do it in C++ before sending it to js.  In the end, I can't say I notice much difference in speed, though I haven't done any benchmarking.
+
+The method for luminance is something I came up with after some trial and error.  I don't know if it's correct or ideal, but it's working for my application (adjusting exposure based on the luminance).
 
 Example
 ==========
@@ -9,10 +13,11 @@ var luminance = require('luminance');
 
 /** luminance.read(filename, callback)
  * Filename points to a JPEG image
- * The callback takes an object with properties 'histArray' (an array), 'luminance', width', and 'height'.
+ * The callback takes an object with properties 'histogram' (an array), 'luminance', width', and 'height'.
  */
 luminance.read("image.jpeg", function(err, res) {
-  console.log(res);
+  console.log("Luminance:", res.luminance);
+  console.log("Histogram Array:", res.histogram);
 });
 
 
