@@ -46,7 +46,7 @@ int read_jpeg_file(char *filename)
           pixel /= 3;
           if(pixel > 255) pixel = 255;
           histogram[pixel]++;
-          luminance += (double)pixel;
+          luminance += ((double)pixel - 127.0) / (256.0 / 8.0);
           count++;
       }
   }
