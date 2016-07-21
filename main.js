@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-var jpeg = require('./build/Release/luminance')
+var jpeg = require('./build/Release/jpeg-lum')
   , fs   = require('fs');
 
 exports.read = jpeg.read;

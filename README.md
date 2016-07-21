@@ -9,7 +9,7 @@ The method for luminance is something I came up with after some trial and error.
 Example
 ==========
 ```
-var luminance = require('luminance');
+var luminance = require('jpeg-lum');
 
 /** luminance.read(filename, callback)
  * Filename points to a JPEG image
@@ -31,7 +31,7 @@ JPEG parsing uses `libjpeg`
 Installation
 ===============
 ```
-$ npm install luminance
+$ npm install jpeg-lum
 ```
 
 License
@@ -39,7 +39,7 @@ License
 
 (The MIT License)
 
-Modifications for luminance Copyright (c) 2016 Elijah Parker
+Modifications for jpeg-lum Copyright (c) 2016 Elijah Parker
 
 Pixelr codebase Copyright (c) 2013 Bill Yeh
 

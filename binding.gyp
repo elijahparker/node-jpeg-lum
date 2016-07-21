@@ -1,8 +1,8 @@
 {
   "targets": [
     {
-      "target_name": "luminance",
-      "sources": [ "./lib/luminance.cc" ],
+      "target_name": "jpeg-lum",
+      "sources": [ "./lib/jpeg-lum.cc" ],
       "link_settings": {
           "libraries": [
               "-ljpeg"

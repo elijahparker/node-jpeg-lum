@@ -1,25 +1,22 @@
 {
   "author": "Elijah Parker",
-  "name": "luminance",
+  "name": "jpeg-lum",
   "description": "Reads luminance and histogram data from JPEG images (based on Bill Yeh's pixelr)",
   "version": "0.0.1",
-  "homepage": "https://github.com/elijahparker/node-luminance/",
+  "homepage": "https://github.com/elijahparker/node-jpeg-lum/",
   "repository": {
     "type": "git",
-    "url": "git://github.com/elijahparker/node-luminance.git"
+    "url": "git://github.com/elijahparker/node-jpeg-lum.git"
   },
   "keywords": [
-    "graphics",
-    "pixel",
-    "png",
+    "photography",
+    "luminance",
+    "exposure",
     "jpeg",
-    "read",
-    "image"
+    "histogram"
   ],
   "main": "./main",
-  "dependencies": {
-    "pngjs": "0.4.0"
-  },
+  "dependencies": {},
   "devDependencies": {},
   "optionalDependencies": {},
   "engines": {
