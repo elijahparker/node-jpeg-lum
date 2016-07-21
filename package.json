@@ -2,7 +2,7 @@
   "author": "Elijah Parker",
   "name": "luminance",
   "description": "Reads luminance and histogram data from JPEG images (based on Bill Yeh's pixelr)",
-  "version": "0.1.6",
+  "version": "0.0.1",
   "homepage": "https://github.com/elijahparker/node-luminance/",
   "repository": {
     "type": "git",
