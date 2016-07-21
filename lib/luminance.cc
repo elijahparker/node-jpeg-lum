@@ -126,4 +126,4 @@ void init(Handle<Object> exports) {
       FunctionTemplate::New(Read)->GetFunction());
 }
 
-NODE_MODULE(pixelr, init)
+NODE_MODULE(luminance, init)
