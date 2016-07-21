@@ -99,17 +99,8 @@ Handle<Value> Read(const Arguments& args) {
   String::AsciiValue string(args[0]);
   char *filename = (char *) malloc(string.length() + 1);
   strcpy(filename, *string);
-  read_jpeg_file(filename);
 
-  if (!raw_image) {
-    Local<Value> err = Exception::Error(String::New("Error reading image file"));    
-    Local<Value> argv[] = { err };
-
-    callback->Call(Context::GetCurrent()->Global(), 1, argv);
-    
-    return scope.Close(Undefined());
-  }
-  else {
+  if (read_jpeg_file(filename)) {
     Handle<Value> value = CreateObject(args);
     Local<Value> argv[] = {
             Local<Value>::New(Null()),
@@ -117,6 +108,14 @@ Handle<Value> Read(const Arguments& args) {
     };
     callback->Call(Context::GetCurrent()->Global(), 2, argv);
     return scope.Close(value);
+  }
+  else {
+    Local<Value> err = Exception::Error(String::New("Error reading image file"));    
+    Local<Value> argv[] = { err };
+
+    callback->Call(Context::GetCurrent()->Global(), 1, argv);
+    
+    return scope.Close(Undefined());
   }
 
   return scope.Close(CreateObject(args));
