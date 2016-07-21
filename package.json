@@ -1,12 +1,12 @@
 {
   "author": "Bill Yeh",
-  "name": "pixelr",
+  "name": "luminance",
   "description": "Simple pixel reader. Read pixels from JPEG and PNG images.",
   "version": "0.1.6",
-  "homepage": "https://github.com/billyeh/pixelr/",
+  "homepage": "https://github.com/elijahparker/node-luminance/",
   "repository": {
     "type": "git",
-    "url": "git://github.com/billyeh/pixelr.git"
+    "url": "git://github.com/elijahparker/node-luminance.git"
   },
   "keywords": [
     "graphics",
