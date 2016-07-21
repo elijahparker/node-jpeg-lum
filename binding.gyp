@@ -1,7 +1,7 @@
 {
   "targets": [
     {
-      "target_name": "jpeg-lum",
+      "target_name": "jpeglum",
       "sources": [ "./lib/jpeg-lum.cc" ],
       "link_settings": {
           "libraries": [

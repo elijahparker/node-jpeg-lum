@@ -126,4 +126,4 @@ void init(Handle<Object> exports) {
       FunctionTemplate::New(Read)->GetFunction());
 }
 
-NODE_MODULE("jpeg-lum", init)
+NODE_MODULE(jpeglum, init)
