@@ -75,7 +75,7 @@ Handle<Value> CreateObject(const Arguments& args) {
     histArray->Set(i, Number::New(histogram[i]));
   }
   obj->Set(String::NewSymbol("histogram"), histArray);
-  obj->Set(String::NewSymbol("luminance"), luminance);
+  obj->Set(String::NewSymbol("luminance"), Number::New(luminance));
   obj->Set(String::NewSymbol("width"), Number::New(width));
   obj->Set(String::NewSymbol("height"), Number::New(height));
 
