@@ -8,6 +8,7 @@ The method for luminance is something I came up with after some trial and error.
 
 0.0.2 Update: converted pixel value to linear (removed gamma correction) before calculating luminance
 0.0.3 Update: changed gamma correction to 1/2.2
+0.0.4 Update: further refined luminance value to match camera exposure
 
 Example
 ==========

@@ -45,7 +45,7 @@ int read_jpeg_file(char *filename)
           for(component=0;component<cinfo.num_components;component++) {
               if(component < 2) {
                   rgb = (double) row_pointer[0][i + component];
-                  rgb = pow(rgb / 255.0, 1 / 2.2) * 255.0; // convert to linear (remove gamma correction)
+                  rgb = pow(rgb / 255.0, 1.0 / 2.2) * 255.0; // convert to linear (remove gamma correction)
                   pixel += rgb;
               }
           }
@@ -57,6 +57,8 @@ int read_jpeg_file(char *filename)
       }
   }
   luminance /= (double)count;
+  luminance /= 2.0;
+  luminance += 2.0;
   jpeg_finish_decompress(&cinfo);
   jpeg_destroy_decompress(&cinfo);
   free(row_pointer[0]);
