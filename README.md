@@ -7,6 +7,7 @@ I was originally using node-pixelr and calculating luminance and histogram data 
 The method for luminance is something I came up with after some trial and error.  I don't know if it's correct or ideal, but it's working for my application (adjusting exposure based on the luminance).
 
 0.0.2 Update: converted pixel value to linear (removed gamma correction) before calculating luminance
+0.0.3 Update: changed gamma correction to 1/2.2
 
 Example
 ==========
