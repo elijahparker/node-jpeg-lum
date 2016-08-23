@@ -3,13 +3,15 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <cstring>
+#include <math.h>
 
 unsigned int size;
 unsigned int histogram[256];
 unsigned int width;
 unsigned int height;
-unsigned long pixel;
+double pixel;
 double luminance;
+double rgb;
 
 
 int read_jpeg_file(char *filename)
@@ -39,14 +41,18 @@ int read_jpeg_file(char *filename)
   while (cinfo.output_scanline < cinfo.image_height) {
       jpeg_read_scanlines( &cinfo, row_pointer, 1 );
       for (i=0; i<cinfo.image_width;i++) {
-          pixel = 0;
+          pixel = 0.0;
           for(component=0;component<cinfo.num_components;component++) {
-            if(component < 2) pixel += (unsigned int) row_pointer[0][i + component];
+              if(component < 2) {
+                  rgb = (double) row_pointer[0][i + component];
+                  rgb = pow(rgb / 255.0, 2.2) * 255.0; // convert to linear (remove gamma correction)
+                  pixel += rgb;
+              }
           }
-          pixel /= 3;
-          if(pixel > 255) pixel = 255;
-          histogram[pixel]++;
-          luminance += ((double)pixel - 127.0) / (256.0 / 8.0);
+          pixel /= 3.0;
+          if(pixel > 255.0) pixel = 255.0;
+          histogram[(int)pixel]++;
+          luminance += (pixel - 127.0) / (256.0 / 8.0);
           count++;
       }
   }
