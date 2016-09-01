@@ -6,9 +6,10 @@ I was originally using node-pixelr and calculating luminance and histogram data 
 
 The method for luminance is something I came up with after some trial and error.  I don't know if it's correct or ideal, but it's working for my application (adjusting exposure based on the luminance).
 
-0.0.2 Update: converted pixel value to linear (removed gamma correction) before calculating luminance
-0.0.3 Update: changed gamma correction to 1/2.2
+0.1.0 Update: added "clipped" property to results; percentage (0-1) of pixels at 255
 0.0.4 Update: further refined luminance value to match camera exposure
+0.0.3 Update: changed gamma correction to 1/2.2
+0.0.2 Update: converted pixel value to linear (removed gamma correction) before calculating luminance
 
 Example
 ==========
@@ -17,10 +18,11 @@ var luminance = require('jpeg-lum');
 
 /** luminance.read(filename, callback)
  * Filename points to a JPEG image
- * The callback takes an object with properties 'histogram' (an array), 'luminance', width', and 'height'.
+ * The callback takes an object with properties 'histogram' (an array), 'luminance', 'clipped' (0-1, percentage of pixels at 255), width', and 'height'.
  */
 luminance.read("image.jpeg", function(err, res) {
   console.log("Luminance:", res.luminance);
+  console.log("Percentage clipped:", res.clipped);
   console.log("Histogram Array:", res.histogram);
 });
 

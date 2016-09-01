@@ -2,7 +2,7 @@
   "author": "Elijah Parker",
   "name": "jpeg-lum",
   "description": "Reads luminance and histogram data from JPEG images (based on Bill Yeh's pixelr)",
-  "version": "0.0.4",
+  "version": "0.1.0",
   "homepage": "https://github.com/elijahparker/node-jpeg-lum/",
   "repository": {
     "type": "git",
