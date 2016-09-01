@@ -12,6 +12,7 @@ unsigned int height;
 double pixel;
 double luminance;
 double rgb;
+double clipped;
 
 
 int read_jpeg_file(char *filename)
@@ -59,6 +60,7 @@ int read_jpeg_file(char *filename)
   luminance /= (double)count;
   luminance /= 2.0;
   luminance += 2.0;
+  clipped = (double)histogram[255] / (double)count;
   jpeg_finish_decompress(&cinfo);
   jpeg_destroy_decompress(&cinfo);
   free(row_pointer[0]);
@@ -84,6 +86,7 @@ Handle<Value> CreateObject(const Arguments& args) {
   }
   obj->Set(String::NewSymbol("histogram"), histArray);
   obj->Set(String::NewSymbol("luminance"), Number::New(luminance));
+  obj->Set(String::NewSymbol("clipped"), Number::New(clipped));
   obj->Set(String::NewSymbol("width"), Number::New(width));
   obj->Set(String::NewSymbol("height"), Number::New(height));
 
