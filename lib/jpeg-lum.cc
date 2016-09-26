@@ -76,35 +76,13 @@ double lum(double x)
     return 0; // Not in Range
 }
 
-
-double lum(double x)
-{
-    int i;
-
-    if(x < lut[0].x) return lut[0].y - 1;
-    if(x > lut[LUT_LENGTH-1].x) return lut[LUT_LENGTH-1].y + 1;
-
-    for( i = 0; i < LUT_LENGTH-1; i++ )
-    {
-        if ( lut[i].x <= x && lut[i+1].x >= x )
-        {
-            double diffx = x - lut[i].x;
-            double diffn = lut[i+1].x - lut[i].x;
-
-            return lut[i].y + ( lut[i+1].y - lut[i].y ) * diffx / diffn; 
-        }
-    }
-
-    return 0; // Not in Range
-}
-
 int read_jpeg_file(char *filename)
 {
   struct jpeg_decompress_struct cinfo;
   struct jpeg_error_mgr jerr;
   JSAMPROW row_pointer[1];
   FILE *infile = fopen(filename, "rb");
-  unsigned int i = 0, component = 0;
+  int i = 0, component = 0;
   if (!infile) {
       printf("Error opening jpeg file %s\n!", filename);
       return -1;
