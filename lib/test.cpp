@@ -13,6 +13,20 @@ double luminance;
 double pixel;
 double clipped;
 
+int read_jpeg_file(char *filename);
+
+int main()
+{
+
+  for(int i = 1; i<32; i++) {
+    char filename[64];
+    sprintf(filename, "thumb_thm%03d.jpg", i);
+    read_jpeg_file(filename);
+    printf("%f\n", luminance);
+  }
+}
+
+
 #define LUT_LENGTH 33
 struct lut_t {
   double x;
@@ -76,28 +90,6 @@ double lum(double x)
     return 0; // Not in Range
 }
 
-
-double lum(double x)
-{
-    int i;
-
-    if(x < lut[0].x) return lut[0].y - 1;
-    if(x > lut[LUT_LENGTH-1].x) return lut[LUT_LENGTH-1].y + 1;
-
-    for( i = 0; i < LUT_LENGTH-1; i++ )
-    {
-        if ( lut[i].x <= x && lut[i+1].x >= x )
-        {
-            double diffx = x - lut[i].x;
-            double diffn = lut[i+1].x - lut[i].x;
-
-            return lut[i].y + ( lut[i+1].y - lut[i].y ) * diffx / diffn; 
-        }
-    }
-
-    return 0; // Not in Range
-}
-
 int read_jpeg_file(char *filename)
 {
   struct jpeg_decompress_struct cinfo;
@@ -147,73 +139,60 @@ int read_jpeg_file(char *filename)
   return 1;
 }
 
-#ifndef BUILDING_NODE_EXTENSION
-  #define BUILDING_NODE_EXTENSION
-#endif
-
-#include <node.h>
-
-using namespace v8;
-
-Handle<Value> CreateObject(const Arguments& args) {
-  HandleScope scope;
-
-  Local<Object> obj = Object::New();
-  Local<Array> histArray = Array::New(256);
-  for (unsigned int i = 0; i < 256; i++) {
-    histArray->Set(i, Number::New(histogram[i]));
+/*
+int read_jpeg_file(char *filename)
+{
+  struct jpeg_decompress_struct cinfo;
+  struct jpeg_error_mgr jerr;
+  JSAMPROW row_pointer[1];
+  FILE *infile = fopen(filename, "rb");
+  unsigned int i = 0, component = 0;
+  if (!infile) {
+      printf("Error opening jpeg file %s\n!", filename);
+      return -1;
   }
-  obj->Set(String::NewSymbol("histogram"), histArray);
-  obj->Set(String::NewSymbol("luminance"), Number::New(luminance));
-  obj->Set(String::NewSymbol("clipped"), Number::New(clipped));
-  obj->Set(String::NewSymbol("width"), Number::New(width));
-  obj->Set(String::NewSymbol("height"), Number::New(height));
+  cinfo.err = jpeg_std_error(&jerr);
+  jpeg_create_decompress(&cinfo);
+  jpeg_stdio_src(&cinfo, infile);
+  jpeg_read_header(&cinfo, TRUE);
+  jpeg_start_decompress(&cinfo);
 
-  return obj;
-}
-
-Handle<Value> Read(const Arguments& args) {
-  HandleScope scope;
-
-  Local<Function> callback = Local<Function>::Cast(args[1]);
-
-  if (args.Length() < 2) {
-    Local<Value> err = Exception::Error(String::New("Specify an image filename to read"));    
-    Local<Value> argv[] = { err };
-
-    callback->Call(Context::GetCurrent()->Global(), 1, argv);
-
-    return scope.Close(Undefined());
+  width = cinfo.output_width;
+  height = cinfo.output_height;
+  size = cinfo.output_width*cinfo.output_height*cinfo.num_components*sizeof(unsigned int);
+  row_pointer[0] = (unsigned char *)malloc(cinfo.output_width*cinfo.num_components);
+  unsigned long count = 0;
+  rgb[0] = 0.0;
+  rgb[1] = 0.0;
+  rgb[2] = 0.0;
+  
+  while (cinfo.output_scanline < cinfo.image_height) {
+      jpeg_read_scanlines( &cinfo, row_pointer, 1 );
+      int black_row = 1;
+      for (i=0; i<cinfo.image_width*cinfo.num_components;i++) {
+        if(row_pointer[0][i]) {
+          black_row = 0;
+          break;
+        }
+      }
+      if(black_row) continue;
+      for (i=0; i<cinfo.image_width*cinfo.num_components;i+=cinfo.num_components) {
+          for(component=0;component<cinfo.num_components;component++) {
+              if(component < 3) {
+                  rgb[component] += (double) row_pointer[0][i + component];
+              }
+          }
+          count++;
+      }
   }
-
-  String::AsciiValue string(args[0]);
-  char *filename = (char *) malloc(string.length() + 1);
-  strcpy(filename, *string);
-
-  if (read_jpeg_file(filename)) {
-    Handle<Value> value = CreateObject(args);
-    Local<Value> argv[] = {
-            Local<Value>::New(Null()),
-            Local<Value>::New(value),
-    };
-    callback->Call(Context::GetCurrent()->Global(), 2, argv);
-    return scope.Close(value);
-  }
-  else {
-    Local<Value> err = Exception::Error(String::New("Error reading image file"));    
-    Local<Value> argv[] = { err };
-
-    callback->Call(Context::GetCurrent()->Global(), 1, argv);
-    
-    return scope.Close(Undefined());
-  }
-
-  return scope.Close(CreateObject(args));
-}
-
-void init(Handle<Object> exports) {
-  exports->Set(String::NewSymbol("read"),
-      FunctionTemplate::New(Read)->GetFunction());
-}
-
-NODE_MODULE(jpeglum, init)
+  rgb[0] /= count;
+  rgb[1] /= count;
+  rgb[2] /= count;
+  double avg = (rgb[0] + rgb[1] + rgb[2]) / 3;
+  printf("%f\n", avg);
+  jpeg_finish_decompress(&cinfo);
+  jpeg_destroy_decompress(&cinfo);
+  free(row_pointer[0]);
+  fclose(infile);
+  return 1;
+}*/
