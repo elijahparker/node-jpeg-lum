@@ -6,6 +6,7 @@ I was originally using node-pixelr and calculating luminance and histogram data 
 
 The method for luminance is something I came up with after some trial and error.  I don't know if it's correct or ideal, but it's working for my application (adjusting exposure based on the luminance).
 
+0.2.0 Update: changed algorithm to be lookup table based instead of trying to calculate, removed histogram array for now
 0.1.0 Update: added "clipped" property to results; percentage (0-1) of pixels at 255
 0.0.4 Update: further refined luminance value to match camera exposure
 0.0.3 Update: changed gamma correction to 1/2.2
