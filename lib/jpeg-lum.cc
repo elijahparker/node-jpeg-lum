@@ -144,26 +144,29 @@ Handle<Value> CreateObject(const FunctionCallbackInfo<Value>& info) {
   }
 
   obj->Set(String::NewFromUtf8(isolate, "histogram", v8::String::kInternalizedString), histArray);
-  obj->Set(String::NewFromUtf8(isolate, "luminance", v8::String::kInternalizedString), Number::New(luminance));
-  obj->Set(String::NewFromUtf8(isolate, "clipped", v8::String::kInternalizedString), Number::New(clipped));
-  obj->Set(String::NewFromUtf8(isolate, "width", v8::String::kInternalizedString), Number::New(width));
-  obj->Set(String::NewFromUtf8(isolate, "height", v8::String::kInternalizedString), Number::New(height));
+  obj->Set(String::NewFromUtf8(isolate, "luminance", v8::String::kInternalizedString), Number::New(isolate, luminance));
+  obj->Set(String::NewFromUtf8(isolate, "clipped", v8::String::kInternalizedString), Number::New(isolate, clipped));
+  obj->Set(String::NewFromUtf8(isolate, "width", v8::String::kInternalizedString), Number::New(isolate, width));
+  obj->Set(String::NewFromUtf8(isolate, "height", v8::String::kInternalizedString), Number::New(isolate, height));
 
   return obj;
 }
 
-Handle<Value> Read(const Arguments& args) {
-  HandleScope scope;
+Handle<Value> Read(const FunctionCallbackInfo<Value>& info) {
+  Isolate* isolate;
+  isolate = info.GetIsolate();
 
-  Local<Function> callback = Local<Function>::Cast(args[1]);
+  //HandleScope scope;
+
+  Local<Function> callback = Local<Function>::Cast(info.args[1]);
 
   if (args.Length() < 2) {
-    Local<Value> err = Exception::Error(String::New("Specify an image filename to read"));    
+    Local<Value> err = Exception::Error(String::New(isolate, "Specify an image filename to read"));    
     Local<Value> argv[] = { err };
 
     callback->Call(Context::GetCurrent()->Global(), 1, argv);
 
-    return scope.Close(Undefined());
+    return info.GetReturnValue().Set(Undefined());
   }
 
   String::AsciiValue string(args[0]);
@@ -177,18 +180,18 @@ Handle<Value> Read(const Arguments& args) {
             Local<Value>::New(value),
     };
     callback->Call(Context::GetCurrent()->Global(), 2, argv);
-    return scope.Close(value);
+    return info.GetReturnValue().Set(value);
   }
   else {
-    Local<Value> err = Exception::Error(String::New("Error reading image file"));    
+    Local<Value> err = Exception::Error(String::New(isolate, "Error reading image file"));    
     Local<Value> argv[] = { err };
 
     callback->Call(Context::GetCurrent()->Global(), 1, argv);
     
-    return scope.Close(Undefined());
+    return info.GetReturnValue().Set((Undefined());
   }
 
-  return scope.Close(CreateObject(args));
+  return info.GetReturnValue().Set(CreateObject(args));
 }
 
 void init(Handle<Object> exports) {
