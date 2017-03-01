@@ -158,13 +158,14 @@ Handle<Value> Read(const FunctionCallbackInfo<Value>& info) {
 
   //HandleScope scope;
 
-  Local<Function> callback = Local<Function>::Cast(info[1]);
+  Persistent<Function> callback = Persistent<Function>::New(args[1]);;
+  //Local<Function> callback = Local<Function>::Cast(info[1]);
 
   if (info.Length() < 2) {
     Local<Value> err = Exception::Error(String::NewFromUtf8(isolate, "Specify an image filename to read", v8::String::kInternalizedString));    
     Local<Value> argv[] = { err };
 
-    callback->Call(isolate, 1, argv);
+    callback->Call(Context::GetCurrent()->Global(), 1, argv);
 
     return info.GetReturnValue().Set(Undefined(isolate));
   }
@@ -180,14 +181,14 @@ Handle<Value> Read(const FunctionCallbackInfo<Value>& info) {
             Local<Value>::New(Null(isolate)),
             Local<Value>::New(isolate, value),
     };
-    callback->Call(info.GetCurrent()->Global(), 2, argv);
+    callback->Call(Context::GetCurrent()->Global(), 2, argv);
     return info.GetReturnValue().Set(static_cast<object>(value));
   }
   else {
     Local<Value> err = Exception::Error(String::NewFromUtf8(isolate, "Error reading image file", v8::String::kInternalizedString));    
     Local<Value> argv[] = { err };
 
-    callback->Call(isolate, 1, argv);
+    callback->Call(Context::GetCurrent()->Global(), 1, argv);
     
     return info.GetReturnValue().Set((Undefined(isolate));
   }
