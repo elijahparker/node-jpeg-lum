@@ -1,3 +1,6 @@
+#include <v8.h>
+#include <node.h>
+
 #include <stdio.h>
 #include <jpeglib.h>
 #include <stdlib.h>
