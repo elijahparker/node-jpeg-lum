@@ -158,7 +158,7 @@ Handle<Value> Read(const FunctionCallbackInfo<Value>& info) {
 
   //HandleScope scope;
 
-  Local<Function> callback = Local<Function>::Cast(info.args[1]);
+  Local<Function> callback = Local<Function>::Cast(info[1]);
 
   if (args.Length() < 2) {
     Local<Value> err = Exception::Error(String::New(isolate, "Specify an image filename to read"));    
@@ -169,12 +169,12 @@ Handle<Value> Read(const FunctionCallbackInfo<Value>& info) {
     return info.GetReturnValue().Set(Undefined());
   }
 
-  String::AsciiValue string(args[0]);
+  String::AsciiValue string(info[0]);
   char *filename = (char *) malloc(string.length() + 1);
   strcpy(filename, *string);
 
   if (read_jpeg_file(filename)) {
-    Handle<Value> value = CreateObject(args);
+    Handle<Value> value = CreateObject(info);
     Local<Value> argv[] = {
             Local<Value>::New(Null()),
             Local<Value>::New(value),
@@ -191,7 +191,7 @@ Handle<Value> Read(const FunctionCallbackInfo<Value>& info) {
     return info.GetReturnValue().Set((Undefined());
   }
 
-  return info.GetReturnValue().Set(CreateObject(args));
+  return info.GetReturnValue().Set(CreateObject(info));
 }
 
 void init(Handle<Object> exports) {
