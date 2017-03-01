@@ -1,6 +1,3 @@
-#include <v8.h>
-#include <node.h>
-
 #include <stdio.h>
 #include <jpeglib.h>
 #include <stdlib.h>
@@ -136,19 +133,21 @@ int read_jpeg_file(char *filename)
 
 using namespace v8;
 
-Handle<Value> CreateObject(const Arguments& args) {
-  HandleScope scope;
-
-  Local<Object> obj = Object::New();
-  Local<Array> histArray = Array::New(256);
+Handle<Value> CreateObject(const FunctionCallbackInfo<Value>& info) {
+  Isolate* isolate;
+  isolate = info.GetIsolate();
+  
+  Local<Object> obj = Object::New(isolate);
+  Local<Array> histArray = Array::New(isolate, 256);
   for (unsigned int i = 0; i < 256; i++) {
-    histArray->Set(i, Number::New(histogram[i]));
+    histArray->Set(i, Number::New(isolate, histogram[i]));
   }
-  obj->Set(String::NewSymbol("histogram"), histArray);
-  obj->Set(String::NewSymbol("luminance"), Number::New(luminance));
-  obj->Set(String::NewSymbol("clipped"), Number::New(clipped));
-  obj->Set(String::NewSymbol("width"), Number::New(width));
-  obj->Set(String::NewSymbol("height"), Number::New(height));
+
+  obj->Set(String::NewFromUtf8(isolate, "histogram", v8::String::kInternalizedString), histArray);
+  obj->Set(String::NewFromUtf8(isolate, "luminance", v8::String::kInternalizedString), Number::New(luminance));
+  obj->Set(String::NewFromUtf8(isolate, "clipped", v8::String::kInternalizedString), Number::New(clipped));
+  obj->Set(String::NewFromUtf8(isolate, "width", v8::String::kInternalizedString), Number::New(width));
+  obj->Set(String::NewFromUtf8(isolate, "height", v8::String::kInternalizedString), Number::New(height));
 
   return obj;
 }
