@@ -164,13 +164,14 @@ Handle<Value> Read(const FunctionCallbackInfo<Value>& info) {
     Local<Value> err = Exception::Error(String::NewFromUtf8(isolate, "Specify an image filename to read", v8::String::kInternalizedString));    
     Local<Value> argv[] = { err };
 
-    callback->Call(Context::GetCurrent()->Global(), 1, argv);
+    callback->Call(isolate.GetCurrent()->Global(), 1, argv);
 
-    return info.GetReturnValue().Set(Undefined());
+    return info.GetReturnValue().Set(Undefined(isolate));
   }
 
-  String::AsciiValue string(info[0]);
-  char *filename = (char *) malloc(string.length() + 1);
+  Local<v8::String> string = info[0];
+  const int length = string->Utf8Length() + 1;
+  char *filename = (char *) malloc(length + 1);
   strcpy(filename, *string);
 
   if (read_jpeg_file(filename)) {
@@ -179,16 +180,16 @@ Handle<Value> Read(const FunctionCallbackInfo<Value>& info) {
             Local<Value>::New(Null()),
             Local<Value>::New(value),
     };
-    callback->Call(Context::GetCurrent()->Global(), 2, argv);
+    callback->Call(isolate.GetCurrent()->Global(), 2, argv);
     return info.GetReturnValue().Set(value);
   }
   else {
     Local<Value> err = Exception::Error(String::NewFromUtf8(isolate, "Error reading image file", v8::String::kInternalizedString));    
     Local<Value> argv[] = { err };
 
-    callback->Call(Context::GetCurrent()->Global(), 1, argv);
+    callback->Call(isolate.GetCurrent()->Global(), 1, argv);
     
-    return info.GetReturnValue().Set((Undefined());
+    return info.GetReturnValue().Set((Undefined(isolate));
   }
 
   return info.GetReturnValue().Set(CreateObject(info));
