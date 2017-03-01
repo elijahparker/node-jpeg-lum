@@ -160,8 +160,8 @@ Handle<Value> Read(const FunctionCallbackInfo<Value>& info) {
 
   Local<Function> callback = Local<Function>::Cast(info[1]);
 
-  if (args.Length() < 2) {
-    Local<Value> err = Exception::Error(String::New(isolate, "Specify an image filename to read"));    
+  if (info.Length() < 2) {
+    Local<Value> err = Exception::Error(String::NewFromUtf8(isolate, "Specify an image filename to read", v8::String::kInternalizedString));    
     Local<Value> argv[] = { err };
 
     callback->Call(Context::GetCurrent()->Global(), 1, argv);
@@ -183,7 +183,7 @@ Handle<Value> Read(const FunctionCallbackInfo<Value>& info) {
     return info.GetReturnValue().Set(value);
   }
   else {
-    Local<Value> err = Exception::Error(String::New(isolate, "Error reading image file"));    
+    Local<Value> err = Exception::Error(String::NewFromUtf8(isolate, "Error reading image file", v8::String::kInternalizedString));    
     Local<Value> argv[] = { err };
 
     callback->Call(Context::GetCurrent()->Global(), 1, argv);
