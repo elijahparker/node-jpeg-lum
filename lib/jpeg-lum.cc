@@ -180,7 +180,7 @@ void Read(const FunctionCallbackInfo<Value>& info) {
   //char *filename = (char *) malloc(length + 1);
   //strcpy(filename, string);
 
-  if (read_jpeg_file(char*(filename))) {
+  if (read_jpeg_file((char *)(filename))) {
     Handle<Value> value = CreateObject(info);
     Local<Value> argv[] = {
             Local<Value>::New(isolate, Null(isolate)),
