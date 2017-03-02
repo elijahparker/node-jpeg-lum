@@ -171,7 +171,7 @@ void Read(const FunctionCallbackInfo<Value>& info) {
     return;
   }
 
-  Local<v8::String> string = String::NewFromUtf8(isolate, Local<Object>::Cast(info[0]));
+  Local<v8::String> string = String::NewFromUtf8(isolate, Local<String>::Cast(info[0]));
   const int length = string->Utf8Length() + 1;
   
   char *filename = new char[length];
