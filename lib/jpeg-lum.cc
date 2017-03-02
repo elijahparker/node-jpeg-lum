@@ -143,11 +143,11 @@ Handle<Value> CreateObject(const FunctionCallbackInfo<Value>& info) {
     histArray->Set(i, Number::New(isolate, histogram[i]));
   }
 
-  obj->Set(String::NewFromUtf8(isolate, "histogram", v8::String::kInternalizedString), histArray);
-  obj->Set(String::NewFromUtf8(isolate, "luminance", v8::String::kInternalizedString), Number::New(isolate, luminance));
-  obj->Set(String::NewFromUtf8(isolate, "clipped", v8::String::kInternalizedString), Number::New(isolate, clipped));
-  obj->Set(String::NewFromUtf8(isolate, "width", v8::String::kInternalizedString), Number::New(isolate, width));
-  obj->Set(String::NewFromUtf8(isolate, "height", v8::String::kInternalizedString), Number::New(isolate, height));
+  obj->Set(String::NewFromUtf8(isolate, "histogram", String::kInternalizedString), histArray);
+  obj->Set(String::NewFromUtf8(isolate, "luminance", String::kInternalizedString), Number::New(isolate, luminance));
+  obj->Set(String::NewFromUtf8(isolate, "clipped", String::kInternalizedString), Number::New(isolate, clipped));
+  obj->Set(String::NewFromUtf8(isolate, "width", String::kInternalizedString), Number::New(isolate, width));
+  obj->Set(String::NewFromUtf8(isolate, "height", String::kInternalizedString), Number::New(isolate, height));
 
   return obj;
 }
@@ -167,7 +167,7 @@ Handle<Value> Read(const FunctionCallbackInfo<Value>& info) {
 
     callback->Call(isolate->GetCurrentContext()->Global(), 1, argv);
 
-    return info.GetReturnValue().SetUndefined();
+    return info->GetReturnValue().SetUndefined();
   }
 
   Local<v8::String> string = info[0];
@@ -190,14 +190,14 @@ Handle<Value> Read(const FunctionCallbackInfo<Value>& info) {
 
     callback->Call(isolate->GetCurrentContext()->Global(), 1, argv);
     
-    return info.GetReturnValue().SetUndefined();
+    return info->GetReturnValue().SetUndefined();
   }
 
-  return info.GetReturnValue().Set(static_cast<object>(CreateObject(info)));
+  return info->GetReturnValue().Set(static_cast<object>(CreateObject(info)));
 }
 
 void init(Handle<Object> exports) {
-  exports->Set(String::NewFromUtf8(isolate, "read", v8::String::kInternalizedString),
+  exports->Set(String::NewFromUtf8(isolate, "read", String::kInternalizedString),
       FunctionTemplate::New(Read)->GetFunction());
 }
 
