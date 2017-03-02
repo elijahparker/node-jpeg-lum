@@ -167,7 +167,8 @@ Handle<Value> Read(const FunctionCallbackInfo<Value>& info) {
 
     callback->Call(isolate->GetCurrentContext()->Global(), 1, argv);
 
-    return info.GetReturnValue().Set(ReturnValue::SetUndefined());
+    info.GetReturnValue().SetUndefined();
+    return;
   }
 
   Local<v8::String> string = info[0];
