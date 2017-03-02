@@ -171,10 +171,10 @@ void Read(const FunctionCallbackInfo<Value>& info) {
     return;
   }
 
-  Local<v8::String> string = String::NewFromUtf8(isolate, info[0]);
+  Local<v8::String> string = String::NewFromUtf8(isolate, Local<Object>::Cast(info[0]));
   const int length = string->Utf8Length() + 1;
   
-  uint8_t* filename = new uint8_t[length];
+  char *filename = new char[length];
   string->WriteOneByte(filename, /* start */ 0, length);
   
   //char *filename = (char *) malloc(length + 1);
