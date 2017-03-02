@@ -152,7 +152,7 @@ Handle<Value> CreateObject(const FunctionCallbackInfo<Value>& info) {
   return obj;
 }
 
-Handle<Value> Read(const FunctionCallbackInfo<Value>& info) {
+void Read(const FunctionCallbackInfo<Value>& info) {
   Isolate* isolate;
   isolate = info.GetIsolate();
 
@@ -183,7 +183,8 @@ Handle<Value> Read(const FunctionCallbackInfo<Value>& info) {
             Local<Value>::New(isolate, value),
     };
     callback->Call(isolate->GetCurrentContext()->Global(), 2, argv);
-    return info.GetReturnValue().Set(value);
+    info.GetReturnValue().Set(value);
+    return;
   }
   else {
     Local<Value> err = Exception::Error(String::NewFromUtf8(isolate, "Error reading image file"));    
@@ -191,10 +192,12 @@ Handle<Value> Read(const FunctionCallbackInfo<Value>& info) {
 
     callback->Call(isolate->GetCurrentContext()->Global(), 1, argv);
     
-    return info.GetReturnValue().SetUndefined();
+    info.GetReturnValue().SetUndefined();
+    return;
   }
 
-  return info.GetReturnValue().Set(static_cast<object>(CreateObject(info)));
+  info.GetReturnValue().Set(static_cast<object>(CreateObject(info)));
+  return;
 }
 
 void init(Handle<Object> exports) {
