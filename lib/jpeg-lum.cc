@@ -180,7 +180,7 @@ void Read(const FunctionCallbackInfo<Value>& info) {
   //char *filename = (char *) malloc(length + 1);
   //strcpy(filename, string);
 
-  if (read_jpeg_file(filename)) {
+  if (read_jpeg_file(char*(filename))) {
     Handle<Value> value = CreateObject(info);
     Local<Value> argv[] = {
             Local<Value>::New(isolate, Null(isolate)),
@@ -207,7 +207,7 @@ void Read(const FunctionCallbackInfo<Value>& info) {
 void init(Handle<Object> exports) {
   Isolate* isolate = exports->GetIsolate();
   exports->Set(String::NewFromUtf8(isolate, "read", String::kInternalizedString),
-      FunctionTemplate::New(Read)->GetFunction());
+      FunctionTemplate::New(isolate, Read)->GetFunction());
 }
 
 NODE_MODULE(jpeglum, init)
