@@ -174,7 +174,7 @@ void Read(const FunctionCallbackInfo<Value>& info) {
   Local<v8::String> string = Local<String>::Cast(info[0]);
   const int length = string->Utf8Length() + 1;
   
-  char *filename = new char[length];
+  uint8_t *filename = new uint8_t[length];
   string->WriteOneByte(filename, /* start */ 0, length);
   
   //char *filename = (char *) malloc(length + 1);
@@ -205,7 +205,8 @@ void Read(const FunctionCallbackInfo<Value>& info) {
 }
 
 void init(Handle<Object> exports) {
-  exports->Set(String::NewFromUtf8("read", String::kInternalizedString),
+  Isolate* isolate = exports->GetIsolate();
+  exports->Set(String::NewFromUtf8(isolate, "read", String::kInternalizedString),
       FunctionTemplate::New(Read)->GetFunction());
 }
 
