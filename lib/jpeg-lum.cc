@@ -173,7 +173,7 @@ Handle<Value> Read(const FunctionCallbackInfo<Value>& info) {
   Local<v8::String> string = info[0];
   const int length = string->Utf8Length() + 1;
   char *filename = (char *) malloc(length + 1);
-  strcpy(filename, *string);
+  strcpy(filename, info[0]);
 
   if (read_jpeg_file(filename)) {
     Handle<Value> value = CreateObject(info);
@@ -197,7 +197,7 @@ Handle<Value> Read(const FunctionCallbackInfo<Value>& info) {
 }
 
 void init(Handle<Object> exports) {
-  exports->Set(String::NewSymbol("read"),
+  exports->Set(String::NewFromUtf8(isolate, "read", v8::String::kInternalizedString),
       FunctionTemplate::New(Read)->GetFunction());
 }
 
