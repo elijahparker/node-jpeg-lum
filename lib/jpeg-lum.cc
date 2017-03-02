@@ -171,7 +171,7 @@ void Read(const FunctionCallbackInfo<Value>& info) {
     return;
   }
 
-  Local<v8::String> string = String::NewFromUtf8(isolate, Local<String>::Cast(info[0]));
+  Local<v8::String> string = Local<String>::Cast(info[0]);
   const int length = string->Utf8Length() + 1;
   
   char *filename = new char[length];
@@ -200,7 +200,7 @@ void Read(const FunctionCallbackInfo<Value>& info) {
     return;
   }
 
-  info.GetReturnValue().Set(static_cast<object>(CreateObject(info)));
+  info.GetReturnValue().Set(Local<Object>::Cast(CreateObject(info)));
   return;
 }
 
