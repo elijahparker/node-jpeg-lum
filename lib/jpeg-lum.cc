@@ -167,7 +167,7 @@ Handle<Value> Read(const FunctionCallbackInfo<Value>& info) {
 
     callback->Call(isolate->GetCurrentContext()->Global(), 1, argv);
 
-    return info.GetReturnValue().Set(Undefined(isolate));
+    return info.GetReturnValue().SetUndefined();
   }
 
   Local<v8::String> string = info[0];
@@ -178,7 +178,7 @@ Handle<Value> Read(const FunctionCallbackInfo<Value>& info) {
   if (read_jpeg_file(filename)) {
     Handle<Value> value = CreateObject(info);
     Local<Value> argv[] = {
-            Local<Value>::New(Null(isolate)),
+            Local<Value>::New(isolate, Null(isolate)),
             Local<Value>::New(isolate, value),
     };
     callback->Call(isolate->GetCurrentContext()->Global(), 2, argv);
@@ -190,7 +190,7 @@ Handle<Value> Read(const FunctionCallbackInfo<Value>& info) {
 
     callback->Call(isolate->GetCurrentContext()->Global(), 1, argv);
     
-    return info.GetReturnValue().Set((Undefined(isolate));
+    return info.GetReturnValue().SetUndefined();
   }
 
   return info.GetReturnValue().Set(static_cast<object>(CreateObject(info)));
