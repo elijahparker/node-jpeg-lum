@@ -106,12 +106,15 @@ int read_jpeg_file(char *filename)
           pixel = 0.0;
           for(component=0;component<cinfo.num_components;component++) {
               if(component < 3) {
-                  pixel = (double) row_pointer[0][i + component];
+                  unsigned int p = row_pointer[0][i + component];
+                  if(p > 255) p = 255;
+                  if(p < 0) p = 0;
+                  pixel = (double) p;
                   pixel = lum(pixel);
                   if(pixel > 4) clipped++;
                   luminance += pixel;
                   count++;
-                  histogram[component][(int)pixel]++;
+                  histogram[component][p]++;
               }
           }
       }
