@@ -152,7 +152,7 @@ Handle<Value> CreateObject(const Arguments& args) {
       if(histogram[j][i] > max) max = histogram[j][i];
     }
     max = (max*16)/((maxPeak*16)/256); // compress to 256 max, integer math for speed
-    histArray->Set(i, Number::New(isolate, max));
+    histArray->Set(i, Number::New(max));
   }
 
   obj->Set(String::NewSymbol("histogram"), histArray);
