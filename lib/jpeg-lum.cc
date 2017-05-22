@@ -82,7 +82,7 @@ int read_jpeg_file(char *filename)
   struct jpeg_error_mgr jerr;
   JSAMPROW row_pointer[1];
   FILE *infile = fopen(filename, "rb");
-  int i = 0, component = 0;
+  unsigned int i = 0, component = 0;
   if (!infile) {
       printf("Error opening jpeg file %s\n!", filename);
       return -1;
