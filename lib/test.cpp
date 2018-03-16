@@ -6,11 +6,11 @@
 #include <math.h>
 
 unsigned int size;
-unsigned int histogram[3][256];
+unsigned int histogram[256];
+unsigned int hist_max = 0;
 unsigned int width;
 unsigned int height;
 double luminance;
-double pixel;
 double clipped;
 
 int read_jpeg_file(char *filename);
@@ -20,9 +20,9 @@ int main()
 
   for(int i = 1; i<32; i++) {
     char filename[64];
-    sprintf(filename, "thumb_thm%03d.jpg", i);
+    sprintf(filename, "test/img-%05d.jpg", i);
     read_jpeg_file(filename);
-    printf("%f\n", luminance);
+    printf("%d: %f, %f\n", i, luminance, clipped);
   }
 }
 
@@ -111,88 +111,53 @@ int read_jpeg_file(char *filename)
   height = cinfo.output_height;
   luminance = 0.0;
   size = cinfo.output_width*cinfo.output_height*cinfo.num_components*sizeof(unsigned int);
-  memset(histogram, 0, sizeof(int)*256*3);
+  memset(histogram, 0, sizeof(int)*256);
   row_pointer[0] = (unsigned char *)malloc(cinfo.output_width*cinfo.num_components);
-  unsigned long count = 0;
+  unsigned long total_count = 0;
+  
+  unsigned int row_number = 0;
+  int skip_rows = 0;
+  float ratio = (float)width / (float)height;
+  if(ratio < 1.75) {
+    skip_rows = (height-((float)width)/1.75)/2;
+    //printf("skipping %d rows on top and bottom", skip_rows);
+  }
+  
   while (cinfo.output_scanline < cinfo.image_height) {
+      row_number++;
       jpeg_read_scanlines( &cinfo, row_pointer, 1 );
+      if(row_number <= skip_rows) continue;
+      if(row_number > height - skip_rows) continue;
       for (i=0; i<cinfo.image_width;i+=cinfo.num_components) {
-          pixel = 0.0;
+          unsigned int m = 0;
           for(component=0;component<cinfo.num_components;component++) {
               if(component < 3) {
-                  pixel = (double) row_pointer[0][i + component];
-                  pixel = lum(pixel);
-                  if(pixel > 4) clipped++;
-                  luminance += pixel;
-                  count++;
-                  histogram[component][(int)pixel]++;
+                  unsigned int p = row_pointer[0][i + component];
+                  if(p > m) m = p;
               }
           }
+          if(m > 255) m = 255;
+          histogram[m]++;
+          total_count++;
       }
   }
+
+  unsigned long count = 0, sum = 0;
+  luminance = 0.0;
+  hist_max = 0;
+  for(int i = 0; i < 256; i++) {
+    sum += histogram[i];
+    if(histogram[i] > hist_max) hist_max = histogram[i];
+    if(sum < total_count / 2) continue; // only look at the upper 50%
+    luminance += lum((float)i) * (float) histogram[i];
+    count += histogram[i];
+  }
+
+  clipped = (double)histogram[255] / (double)count;
   luminance /= (double)count;
-  clipped /= (double)count;
   jpeg_finish_decompress(&cinfo);
   jpeg_destroy_decompress(&cinfo);
   free(row_pointer[0]);
   fclose(infile);
   return 1;
 }
-
-/*
-int read_jpeg_file(char *filename)
-{
-  struct jpeg_decompress_struct cinfo;
-  struct jpeg_error_mgr jerr;
-  JSAMPROW row_pointer[1];
-  FILE *infile = fopen(filename, "rb");
-  unsigned int i = 0, component = 0;
-  if (!infile) {
-      printf("Error opening jpeg file %s\n!", filename);
-      return -1;
-  }
-  cinfo.err = jpeg_std_error(&jerr);
-  jpeg_create_decompress(&cinfo);
-  jpeg_stdio_src(&cinfo, infile);
-  jpeg_read_header(&cinfo, TRUE);
-  jpeg_start_decompress(&cinfo);
-
-  width = cinfo.output_width;
-  height = cinfo.output_height;
-  size = cinfo.output_width*cinfo.output_height*cinfo.num_components*sizeof(unsigned int);
-  row_pointer[0] = (unsigned char *)malloc(cinfo.output_width*cinfo.num_components);
-  unsigned long count = 0;
-  rgb[0] = 0.0;
-  rgb[1] = 0.0;
-  rgb[2] = 0.0;
-  
-  while (cinfo.output_scanline < cinfo.image_height) {
-      jpeg_read_scanlines( &cinfo, row_pointer, 1 );
-      int black_row = 1;
-      for (i=0; i<cinfo.image_width*cinfo.num_components;i++) {
-        if(row_pointer[0][i]) {
-          black_row = 0;
-          break;
-        }
-      }
-      if(black_row) continue;
-      for (i=0; i<cinfo.image_width*cinfo.num_components;i+=cinfo.num_components) {
-          for(component=0;component<cinfo.num_components;component++) {
-              if(component < 3) {
-                  rgb[component] += (double) row_pointer[0][i + component];
-              }
-          }
-          count++;
-      }
-  }
-  rgb[0] /= count;
-  rgb[1] /= count;
-  rgb[2] /= count;
-  double avg = (rgb[0] + rgb[1] + rgb[2]) / 3;
-  printf("%f\n", avg);
-  jpeg_finish_decompress(&cinfo);
-  jpeg_destroy_decompress(&cinfo);
-  free(row_pointer[0]);
-  fclose(infile);
-  return 1;
-}*/
